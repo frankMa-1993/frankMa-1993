@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Streamedian RTSP player example</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="sourcesNode"></div>
+<div>
+    <input id="stream_url" size="36">
+    <button id="set_new_url">Set</button>
+</div>
+
+<video id="test_video" controls autoplay>
+</video>
+
+<script src="streamedian.min.js"></script>
+
+<script>
+    if (window.Streamedian) {
+        const html5Player = document.getElementById("test_video");
+        const urlButton = document.getElementById("set_new_url");
+        const urlEdit = document.getElementById("stream_url");
+
+        urlButton.onclick = () => {
+            setPlayerSource(urlEdit.value);
+        };
+
+        const errHandler = function (err) {
+            console.log(err.message)
+        };
+
+        const stuHandler = function (currentProxy, message) {
+            if (message === 9000001) {
+                // rtspMessage = '正在请求视频'
+            } else if (message === 9000002) {
+                // rtspMessage = '请求视频失败'
+            } else if (message === 9000003) {
+                // rtspMessage = '视频中断正在尝试断线重连...'
+            } else if (message === 9000004) {
+                // rtspMessage = '正在重连视频'
+                reconnectWs()
+            } else if (message === 9000014) {
+                // rtspMessage = '正在重新拉取视频'
+                reconnectWs()
+            } else {
+                // rtspMessage = message.toFixed(2) + 'kbps'
+            }
+        };
+
+
+        const playerOptions = {
+            socket: "ws:10.101.39.93:8060/ws",
+            redirectNativeMediaErrors: true,
+            bufferDuration: 5,
+            errorHandler: errHandler,
+            statuHandler: stuHandler
+        };
+
+        function setPlayerSource(newSource) {
+            if (this.player) {
+                this.player.destroy();
+                this.player = null;
+            }
+            html5Player.src = newSource;
+            this.player = window.Streamedian.player("test_video", playerOptions);
+        }
+
+        const reconnectWs = function () {
+            setPlayerSource(urlEdit.value)
+        }
+
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>视频用例(Chrome:H5----And-----IE:FLASH)</title>
+    <link href="../button.css" type="text/css" rel="stylesheet">
+    <link href="../video.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="../swfobject-all.js"></script>
+    <script type="text/javascript" src="../cmsv6player.min.js"></script>
+    <!-- <script type="text/javascript" src="../libcmsv6decode.wasm"></script> -->
+    <!-- <script type="text/javascript" src="../public.js"></script> -->
+    <!-- <script type="text/javascript" src="../lang_fun.js?version=1"></script> -->
+    <script>
+        var isInitFinished = false;//视频插件是否加载完成
+
+		function getUrlParameter(name) {
+			if (location.search == '') {
+				return '';
+			}
+
+			var o = {};
+			var search = location.search.replace(/\?/, '');//只替换第一个问号,如果参数中带有问号,当作普通文本
+			var s = search.split('&');
+			for (var i = 0; i < s.length; i++) {
+				o[s[i].split('=')[0]] = s[i].split('=')[1];
+			}
+			return o[name] == undefined ? '' : o[name];
+		}
+		
+		function setText(domId, val) {
+			var domItem = document.getElementById(domId);
+			if (domItem != null) {
+				domItem.innerHTML = val; 
+			}
+		}
+		
+		function setValue(domId, val) {
+			var domItem = document.getElementById(domId);
+			if (domItem != null) {
+				domItem.value = val; 
+			}
+		}
+		
+		function getValue(domId) {
+			var domItem = document.getElementById(domId);
+			if (domItem != null) {
+				return domItem.value;
+			} else {
+				return "";
+			}
+		}
+		
+		function setFocus(domId) {
+			var domItem = document.getElementById(domId);
+			if (domItem != null) {
+				domItem.focus();
+			}
+		}
+        function onReady() {
+            //加载语言
+            // langInitByUrl();
+            loadReadyPage()
+        };
+
+        function loadReadyPage() {
+            // if(typeof lang === 'undefined'){
+            //     setTimeout(loadReadyPage, 50);
+            //     return;
+            // }
+            // 解决pc端屏幕缩放比例对页面布局的影响
+            handleScreen();
+            // alert(lang.talkbackDesc);
+            var host = window.location.host;
+            var ip = host.split(":")[0];
+            if (!ip || ip == 'localhost') {
+                // ip = '127.0.0.1';
+                ip = '139.9.251.220';
+            }
+            setValue('serverIp', ip);
+            setValue('serverPort', 6604);
+            var strLang = getUrlParameter('lang');
+            if (strLang == "en") {
+                // lang = new langEn();
+                setValue('languagePath', 'en.xml');
+            }
+            // loadLang();
+
+            //初始化视频插件
+            initPlayerExample();
+        }
+
+        // 初始化视频插件
+        function initPlayerExample() {
+            for (var i = 0; i < 101; i++) {
+                playingStatusArray.push(false);
+            }
+            var _isVodMode = getValue('vodMode');
+            // 赋值初始化为未完成
+            isInitFinished = false;
+            // 视频插件宽度
+            var width = getValue('playerWidth');
+            if (width == '') {
+                setFocus('playerWidth');
+                return;
+            }
+            // 视频插件高度
+            var hieght = getValue('playerHeight');
+            if (hieght == '') {
+                setFocus('playerHeight');
+                return;
+            }
+            var strLang = getUrlParameter('lang');
+            var options = {
+                domId: "cmsv6flash",
+                isVodMode: _isVodMode == "1" ? true : false,
+                width: width,
+                height: hieght,
+                lang: strLang == "" ? "en" : strLang
+            }
+            swfobject = new Cmsv6Player(options);
+            console.log('初始化插件代码成功')
+            initFlash();
+        }
+
+        // 插件初始化完成后执行
+        function initFlash() {
+        if (typeof swfobject == "undefined" ||
+            typeof swfobject.setWindowNum == "undefined") {
+            setTimeout(initFlash, 50);
+        } else {
+            // 初始化插件语言
+            var language = getValue('languagePath');
+            if (!language) {
+                return;
+            }
+            swfobject.setLanguage(language);
+            // 先将全部窗口创建好
+            swfobject.setWindowNum(36);
+            // 再配置当前的窗口数目
+            var windowNum = getValue('windowNumber');
+            if (windowNum == '') {
+                setFocus('windowNumber');
+                return;
+            }
+            swfobject.setWindowNum(windowNum);
+            // 设置服务器信息
+            var serverIp = getValue('serverIp');
+            if (!serverIp) {
+                setFocus('serverIp');
+                return;
+            }
+            var serverPort = getValue('serverPort');
+            if (!serverPort) {
+                setFocus('serverPort');
+                return;
+            }
+            console.log('插件初始化完成后执行')
+            swfobject.setServerInfo(serverIp, serverPort);
+            isInitFinished = true;
+        }
+    }
+
+        //播放实时视频
+        /*
+            http://139.9.251.220:6605/3/1?MediaType=1&Type=0&AVType=1&DevIDNO=000000600114&Channel=0
+            MediaType: 1
+            Type: 0
+            AVType: 1
+            DevIDNO: 000000600114
+            Channel: 0
+        */
+        function playLiveVideo() {
+            if (!isInitFinished) {
+                return;
+            }
+            //窗口下标
+            var index = getValue('liveVideoIndex');
+            if (index == '') {
+                setFocus('liveVideoIndex');
+                return;
+            }
+            //jsession会话号
+            var jsession = getValue('liveJsession');
+            if (jsession == '') {
+                setFocus('liveJsession');
+                return;
+            }
+            //设备号
+            var devIdno = getValue('liveDevIdno');
+            if (devIdno == '') {
+                setFocus('liveDevIdno');
+                return;
+            }
+            //通道号
+            var channel = getValue('liveChannel');
+            if (channel == '') {
+                setFocus('liveChannel');
+                return;
+            }
+            //码流
+            var stream = getValue('liveStream');
+            if (stream == '') {
+                setFocus('liveStream');
+                return;
+            }
+            //最小缓冲时长
+            var minBufferTime = getValue('minBufferTime');
+            if (minBufferTime != '') {
+                swfobject.getObjectById("cmsv6flash").setBufferTime(index, minBufferTime);
+            }
+            //最大缓冲时长
+            var maxBufferTime = getValue('maxBufferTime');
+            if (maxBufferTime != '') {
+                swfobject.getObjectById("cmsv6flash").setBufferTimeMax(index, maxBufferTime);
+            }
+
+            //先停止视频窗口
+            swfobject.getObjectById("cmsv6flash").stopVideo(index);
+            //设置窗口标题
+            var title = getValue('liveWindowTitle');
+            swfobject.getObjectById("cmsv6flash").setVideoInfo(index, title);
+            //播放视频
+            swfobject.getObjectById("cmsv6flash").startVideo(index, jsession, devIdno, channel, stream, true);
+
+
+            // var _url = 'rtsp://139.9.251.220:6604/3/3?AVType=1&jsession=12345678&DevIDNO=60000004&Channel=0&Stream=1'
+            // ajax({
+            //     type: 'POST',
+            //     url: _url,
+            //     cache: false,
+            //     dataType: 'json',
+            //     success: function (data) {
+            //         if (data.result == 0) {
+            //             setValue('liveJsession', data.jsession);
+            //             console.log('登录成功')
+            //         } else {
+            //             // alert(lang.loginError);
+            //         }
+            //     },
+            //     error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //         try {
+            //             if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown);
+            //         } catch (e) {
+            //         }
+            //         // alert(lang.loginError);
+            //     }
+            // });
+        }
+
+        //停止视频窗口播放视频窗口
+        function stopLiveVideo() {
+            if (!isInitFinished) {
+                return;
+            } else {
+                //窗口下标
+                var index = getValue('liveVideoIndex');
+                if (index == '') {
+                    setFocus('liveVideoIndex');
+                    return;
+                }
+                swfobject.getObjectById("cmsv6flash").stopVideo(index);
+            }
+        }
+
+        //重置实时视频窗口
+        function reSetLiveVideo() {
+            if (!isInitFinished) {
+                return;
+            } else {
+                //窗口下标
+                var index = getValue('liveVideoIndex');
+                if (index == '') {
+                    setFocus('liveVideoIndex');
+                    return;
+                }
+                swfobject.getObjectById("cmsv6flash").reSetVideo(index);
+            }
+        }
+        
+		function downPcmTool() {
+			window.open('/product/CMSV6PcmTool/CMSV6PcmTool.exe');
+		}
+
+		function ajax(){ 
+		  var ajaxData = { 
+		    type:arguments[0].type || "GET", 
+		    url:arguments[0].url || "", 
+		    async:arguments[0].async || "true", 
+		    data:arguments[0].data || null, 
+		    dataType:arguments[0].dataType || "text", 
+		    contentType:arguments[0].contentType || "application/x-www-form-urlencoded", 
+		    beforeSend:arguments[0].beforeSend || function(){}, 
+		    success:arguments[0].success || function(){}, 
+		    error:arguments[0].error || function(){} 
+		  } 
+		  ajaxData.beforeSend() 
+		  var xhr = createxmlHttpRequest();  
+		  xhr.responseType=ajaxData.dataType; 
+		  xhr.open(ajaxData.type,ajaxData.url,ajaxData.async);  
+		  xhr.setRequestHeader("Content-Type",ajaxData.contentType);  
+		  xhr.send(convertData(ajaxData.data));  
+		  xhr.onreadystatechange = function() {  
+		    if (xhr.readyState == 4) {  
+		      if(xhr.status == 200){ 
+		        ajaxData.success(xhr.response) 
+		      }else{ 
+		        ajaxData.error() 
+		      }  
+		    } 
+		  }  
+		}
+
+		function createxmlHttpRequest() { 
+		  if (window.ActiveXObject) {  
+		    return new ActiveXObject("Microsoft.XMLHTTP");  
+		  } else if (window.XMLHttpRequest) {  
+		    return new XMLHttpRequest();  
+		  }  
+		}
+
+		function convertData(data){
+		  if( typeof data === 'object' ){ 
+		    var convertResult = "" ;  
+		    for(var c in data){  
+		      convertResult+= c + "=" + data[c] + "&";  
+		    }  
+		    convertResult=convertResult.substring(0,convertResult.length-1) 
+		    return convertResult; 
+		  }else{ 
+		    return data; 
+		  } 
+		}
+        //用户登录
+        function userLogin() {
+            //用户名
+            var account = getValue('account');
+            if (account == '') {
+                setFocus('account');
+                return;
+            }
+            //密码
+            var password = getValue('userPassword');
+            if (password == '') {
+                setFocus('userPassword');
+                return;
+            }
+            /*
+            A榕桑科技谢生:
+            139.9.251.229:80
+
+            A榕桑科技谢生:
+            139.9.251.229:88
+
+            A榕桑科技谢生:
+            139.9.251.229:8088
+
+            */
+			// var _url = location.protocol + '//' + window.location.host + '/StandardApiAction_login.action?account=' + account + "&password=" + password;
+            var _url = 'http://139.9.251.220:88/StandardApiAction_login.action?account=c060u01&password=000000';
+            ajax({
+                type: 'POST',
+                url: _url,
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.result == 0) {
+                        setValue('liveJsession', data.jsession);
+                        console.log('登录成功')
+                    } else {
+                        // alert(lang.loginError);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    try {
+                        if (p.onError) p.onError(XMLHttpRequest, textStatus, errorThrown);
+                    } catch (e) {
+                    }
+                    // alert(lang.loginError);
+                }
+            });
+        }
+
+        //设置缓冲时长
+        function setBufferInfo() {
+            if (!isInitFinished) {
+                return;
+            } else {
+                //窗口下标
+                var index = getValue('liveVideoIndex');
+                if (index == '') {
+                    setFocus('liveVideoIndex');
+                    return;
+                }
+                //最小缓冲时长
+                var minBufferTime = getValue('minBufferTime');
+                //最大缓冲时长
+                var maxBufferTime = getValue('maxBufferTime');
+                if (minBufferTime == '' && maxBufferTime == '') {
+                    return;
+                }
+                if (maxBufferTime != '') {
+                    swfobject.getObjectById("cmsv6flash").setBufferTimeMax(index, maxBufferTime);
+                }
+                if (minBufferTime != '') {
+                    swfobject.getObjectById("cmsv6flash").setBufferTime(index, minBufferTime);
+                }
+            }
+        }
+
+        var selectIndex = 0;
+        var playingStatusArray = [];
+
+        //判断当前选择窗口是否播放状态
+        function checkIsPlaying() {
+            if (playingStatusArray[selectIndex]) {
+                // alert(lang.vedioPlay);
+            } else {
+                // alert(lang.vedioNoPlay);
+            }
+        }
+
+    </script>
+</head>
+<body onresize="handleScreen();" onload="onReady();">
+<div id="flashExample">
+    <div id="cmsv6flash"></div>
+    <div></div>
+    <div id="eventTip"></div>
+    <div class="player-params">
+        <div class="player-param">
+            <!-- <video src="" width="400px" height="200px" controls></video> -->
+            <button id="isPlay" class="button button-primary button-rounded button-small"
+               onclick="checkIsPlaying();">播放状态</button>
+        </div>
+    </div>
+</div>
+<div id="operateExample">
+    <!--  用户登录开始 -->
+    <div class="userLogin">
+		<p id="descTitle"></p>
+		<!-- <p ><a href="videoExampleH5.html" id="h5Example">videoExampleH5(Only H5 Support)</a></p> -->
+        <p id="getJsessionTitle">登录获取会话号</p>
+        <div class="player-params">
+            <div class="player-param">
+                <a class="title" id="accountTitle">用户名：</a>
+                <input style="width: 150px;" value="c060u01" id="account">
+                <a style="padding-left: 20px;" class="title" id="passwordTitle">密码：</a>
+                <input type="password" style="width: 150px;" value="000000" id="userPassword">
+            </div>
+            <div class="player-param">
+                <a id="userLoginBtn" class="button button-primary button-rounded button-small"
+                   onclick="userLogin();">登录</a>
+            </div>
+			 <div class="player-param">
+                <a id="jsessionId" class="title">会话号：</a>
+                <input style="width: 300px;" value="C7435D1EA0E68118348585F63AAE66A4" id="liveJsession">
+            </div>
+        </div>
+    </div>
+    <!--  用户登录结束 -->
+    <!--  视频插件初始化开始  -->
+    <div class="videoInit">
+        <p id="videoInitTitle">初始化</p>
+        <div class="player-params">
+            <div class="player-param">
+                <a class="title" id="videoLangTitle">插件语言：</a>
+                <select style="width: 140px;" id="languagePath">
+                    <option>cn.xml</option>
+                    <option>en.xml</option>
+                </select>
+                <!--     				<input style="width: 140px;" value="cn.xml" class="languagePath"> -->
+                <a style="margin-left: 20px;" class="button button-primary button-rounded button-small settings"
+                   onclick="setVideoLanguage()" id="setLangBtn">设置</a>
+            </div>
+            <div class="player-param">
+				<a class="title" id="vodModeTitle">插件模式：</a>
+                <select style="width: 140px;" id="vodMode">
+                </select>
+                <a class="title" id="videoWidthTitle">插件宽度：</a>
+                <input style="width: 140px;" value="400" id="playerWidth">
+                <a style="padding-left: 20px;" class="title" id="videoHeightTitle">插件高度：</a>
+                <input style="width: 140px;" value="400" id="playerHeight">
+            </div>
+            <div class="player-param">
+                <a class="title" id="aServerIp">服务器IP：</a>
+                <input style="width: 140px;" value="139.9.251.220" id="serverIp">
+                <a style="padding-left: 20px;" id="aServerPort" class="title">服务器端口：</a>
+                <input style="width: 100px;" value="8088" id="serverPort">
+                <a style="margin-left: 20px;" class="button button-primary button-rounded button-small settings"
+                   onclick="setVideoServer()" id="setServerBtn">设置</a>
+            </div>
+            <div class="player-param">
+                <a class="title" id="windowNumberTitle">窗口数目：</a>
+                <input style="width: 100px;" value="1" id="windowNumber">
+                <a style="margin-left: 20px;" class="button button-primary button-rounded button-small settings"
+                   onclick="setVideoWindowNumber();" id="setWndBtn">设置</a>
+            </div>
+            <div class="player-param">
+                <a id="videoInitBtn" class="button button-primary button-rounded button-small"
+                   onclick="initPlayerExample();" id="initBtn">初始化</a>
+            </div>
+        </div>
+    </div>
+    <!--  视频插件初始化结束  -->
+    <!--  实时视频开始  -->
+    <div class="videoLive">
+        <p id="videoLiveTitle">实时视频</p>
+        <div class="player-params">
+            <div class="player-param">
+                <a class="title" id="windowIndex">窗口下标：</a>
+                <input style="width: 80px;" value="0" id="liveVideoIndex">
+                <a style="padding-left: 20px;" class="title" id="videoTitleTitle">标题：</a>
+                <input style="width: 300px;" value="富民城内涝监测点" id="liveWindowTitle">
+                <a style="margin-left: 20px;" class="button button-primary button-rounded button-small settings"
+                   onclick="setWindowTitle();" id="setTitleBtn">设置</a>
+            </div>
+            <div class="player-param">
+                <a class="title" id="realDevIdnoTitle">设备号：</a>
+                <input style="width: 300px;" value="000000600114" id="liveDevIdno">
+                <a style="padding-left: 20px;" class="title" id="realDevChannelTitle">通道：</a>
+                <input style="width: 100px;" value="0" id="liveChannel">
+            </div>
+			 <div class="player-param">
+                <a style="padding-left: 20px;" class="title" id="videoStreamTitle">码流：</a>
+                <select style="width: 100px;" id="liveStream">
+                    <option>0</option>
+                    <option selected>1</option>
+                </select>
+                <!--     				<input style="width: 100px;" value="1" class="liveStream"> -->
+            </div>
+            <div class="player-param">
+                <div>
+                    <a class="title" id="minBufferTimeTitle">最小缓冲时长：</a>
+                    <input style="width: 80px;" value="2" id="minBufferTime">
+                    <a style="padding-left: 20px;" id="maxBufferTimeTitle" class="title">最大缓冲时长：</a>
+                    <input style="width: 80px;" value="6" id="maxBufferTime">
+                    <a style="margin-left: 20px;" class="button button-primary button-rounded button-small settings"
+                       onclick="setBufferInfo();" id="setBufferBtn">设置</a>
+                </div>
+                <div>
+                    <span id="bufferTimeDesc" style="font-size:10px;">说明：主要用于调整视频延时，当缓存的数据达到了最小缓冲时长时（默认为2秒），则会进行播放，当到了最大缓冲时长（默认为6秒），则进行快放。</span>
+                </div>
+            </div>
+            <div class="player-param">
+                <a id="videoPlayBtn" class="button button-primary button-rounded button-small"
+                   onclick="playLiveVideo();">播放</a>
+                <a id="videoStopBtn" style="margin-left: 20px;" class="button button-primary button-rounded button-small stop"
+                   onclick="stopLiveVideo()">停止</a>
+                <a id="videoResetBtn" style="margin-left: 20px;"
+                   class="button button-primary button-rounded button-small" onclick="reSetLiveVideo()">重置</a>
+            </div>
+        </div>
+    </div>
+    <!--  实时视频结束  -->
+  
+</div>
+
+</body>
+</html>

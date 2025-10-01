@@ -1,0 +1,20 @@
+{
+  "name": "workspace",
+  "version": "1.0.0",
+  "description": "- 👋 Hi, I’m @frankMa-1993 - 👀 I’m interested in ... - 🌱 I’m currently learning ... - 💞️ I’m looking to collaborate on ... - 📫 How to reach me ... <!--- frankMa-1993/frankMa-1993 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile. You can click the Preview link to take a look at your changes. ---> 我没有对这个行业做过什么贡献，只是从中获取利益罢了。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frankMa-1993/frankMa-1993.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/frankMa-1993/frankMa-1993/issues"
+  },
+  "homepage": "https://github.com/frankMa-1993/frankMa-1993#readme"
+}

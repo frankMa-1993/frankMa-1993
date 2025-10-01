@@ -1,0 +1,136 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/discover/discover",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/message/message",
+			"style": {
+				"navigationBarTitleText": "消息",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/profile/profile",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/post-detail/post-detail",
+			"style": {
+				"navigationBarTitleText": "动态详情"
+			}
+		},
+		{
+			"path": "pages/publish/publish",
+			"style": {
+				"navigationBarTitleText": "发布动态"
+			}
+		},
+		{
+			"path": "pages/user-profile/user-profile",
+			"style": {
+				"navigationBarTitleText": "个人资料"
+			}
+		},
+		{
+			"path": "pages/friends/friends",
+			"style": {
+				"navigationBarTitleText": "好友"
+			}
+		},
+		{
+			"path": "pages/chat/chat",
+			"style": {
+				"navigationBarTitleText": "聊天"
+			}
+		},
+		{
+			"path": "pages/settings/settings",
+			"style": {
+				"navigationBarTitleText": "设置"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "社交小程序",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"background": "#efeff4"
+		}
+	},
+	"tabBar": {
+		"color": "#7A7E83",
+		"selectedColor": "#3cc51f",
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff",
+		"height": "50px",
+		"fontSize": "10px",
+		"iconWidth": "24px",
+		"spacing": "3px",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"iconPath": "static/tab-icons/home.png",
+				"selectedIconPath": "static/tab-icons/home-active.png",
+				"text": "首页"
+			},
+			{
+				"pagePath": "pages/discover/discover",
+				"iconPath": "static/tab-icons/discover.png",
+				"selectedIconPath": "static/tab-icons/discover-active.png",
+				"text": "发现"
+			},
+			{
+				"pagePath": "pages/message/message",
+				"iconPath": "static/tab-icons/message.png",
+				"selectedIconPath": "static/tab-icons/message-active.png",
+				"text": "消息"
+			},
+			{
+				"pagePath": "pages/profile/profile",
+				"iconPath": "static/tab-icons/profile.png",
+				"selectedIconPath": "static/tab-icons/profile-active.png",
+				"text": "我的"
+			}
+		]
+	},
+	"condition": {
+		"current": 0,
+		"list": [
+			{
+				"name": "",
+				"path": "",
+				"query": ""
+			}
+		]
+	}
+}

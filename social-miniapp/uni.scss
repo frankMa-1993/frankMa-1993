@@ -1,0 +1,52 @@
+// uni-app全局样式变量
+
+// 颜色定义
+$uni-color-primary: #007AFF;
+$uni-color-success: #34C759;
+$uni-color-warning: #FF9500;
+$uni-color-error: #FF3B30;
+$uni-color-info: #5AC8FA;
+
+// 文字颜色
+$uni-text-color: #333333;
+$uni-text-color-grey: #666666;
+$uni-text-color-placeholder: #999999;
+$uni-text-color-disable: #CCCCCC;
+
+// 背景颜色
+$uni-bg-color: #FFFFFF;
+$uni-bg-color-grey: #F8F8F8;
+$uni-bg-color-hover: #F1F1F1;
+$uni-bg-color-mask: rgba(0, 0, 0, 0.4);
+
+// 边框颜色
+$uni-border-color: #E5E5E5;
+$uni-border-color-light: #F0F0F0;
+
+// 尺寸定义
+$uni-spacing-sm: 8px;
+$uni-spacing-base: 15px;
+$uni-spacing-lg: 30px;
+
+// 字体大小
+$uni-font-size-sm: 24rpx;
+$uni-font-size-base: 28rpx;
+$uni-font-size-lg: 32rpx;
+
+// 边框圆角
+$uni-border-radius-sm: 4px;
+$uni-border-radius-base: 8px;
+$uni-border-radius-lg: 12px;
+$uni-border-radius-circle: 50%;
+
+// 阴影
+$uni-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+$uni-shadow-base: 0 2px 8px rgba(0, 0, 0, 0.1);
+$uni-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+// 层级
+$uni-index-normal: 1;
+$uni-index-higher: 10;
+$uni-index-popper: 100;
+$uni-index-mask: 1000;
+$uni-index-toast: 10000;

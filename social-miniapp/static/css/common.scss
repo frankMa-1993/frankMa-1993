@@ -1,0 +1,68 @@
+// 通用SCSS变量和混入
+
+// 颜色变量
+$primary-color: #007AFF;
+$secondary-color: #5856D6;
+$success-color: #34C759;
+$warning-color: #FF9500;
+$danger-color: #FF3B30;
+$info-color: #5AC8FA;
+
+$text-color: #333333;
+$text-secondary: #666666;
+$text-muted: #999999;
+$text-light: #cccccc;
+
+$bg-color: #f5f5f5;
+$bg-white: #ffffff;
+$border-color: #e5e5e5;
+
+// 尺寸变量
+$border-radius: 8rpx;
+$border-radius-large: 16rpx;
+$spacing-small: 10rpx;
+$spacing-medium: 20rpx;
+$spacing-large: 30rpx;
+
+// 字体大小
+$font-size-small: 24rpx;
+$font-size-normal: 28rpx;
+$font-size-large: 32rpx;
+$font-size-xl: 36rpx;
+
+// 混入
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin multi-line-ellipsis($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 动画
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+// 阴影
+@mixin box-shadow($shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1)) {
+  box-shadow: $shadow;
+}

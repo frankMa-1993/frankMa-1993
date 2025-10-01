@@ -55,7 +55,7 @@ export default {
 
 <style lang="scss">
 /* 全局样式 */
-@import url('./static/css/common.scss');
+@use './static/css/common.scss' as *;
 
 page {
   background-color: #f5f5f5;
